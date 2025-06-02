@@ -10,7 +10,7 @@ import {
   uuid,
   index,
 } from "drizzle-orm/pg-core";
-
+import { InferModel } from "drizzle-orm";
 export const userRolesEnum = pgEnum("user_roles", [
   "admin",
   "organizer",
@@ -36,6 +36,7 @@ export const Users = pgTable(
     name: varchar("name", { length: 50 }).notNull(),
     bio: text("bio").notNull().default(""),
     image_url: text("image_url"),
+    thumbnail_url: text("thumbnail_url"),
     provider: varchar("provider", { length: 100 }),
     createdAt: timestamp("created_at").notNull().defaultNow(),
     updatedAt: timestamp("updated_at").notNull().defaultNow(),
@@ -58,8 +59,8 @@ export const Events = pgTable(
       .references(() => Users.id),
     maxAttendees: integer("max_attendees").notNull(),
     currentAttendees: integer("max_attendees").notNull().default(0),
-    createdAt: timestamp("created_at").notNull().defaultNow(),
-    updatedAt: timestamp("updated_at").notNull().defaultNow(),
+    createdAt: timestamp("created_at").defaultNow(),
+    updatedAt: timestamp("updated_at").defaultNow(),
   },
   (events) => [
     index("status_idx").on(events.status),
@@ -85,3 +86,6 @@ export const bookings = pgTable(
     uniqueIndex("user_event_idx").on(bookings.userId, bookings.eventId),
   ]
 );
+
+export type User = typeof Users.$inferSelect;
+export type newUser = typeof Users.$inferInsert;
