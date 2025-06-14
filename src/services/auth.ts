@@ -45,26 +45,22 @@ export const signUpWithEmail = async (
 };
 
 export const loginWithEmail = async (email: string, password: string) => {
-  try {
-    const user: User | undefined = await db.query.Users.findFirst({
-      where: eq(Users.email, email),
-    });
-    if (!user) throw new UnauthorizedError("User not found with this email");
-    if (!user?.hashedpassword) {
-      if (user?.provider) {
-        throw new UnauthorizedError(
-          "This email is registered with an OAuth provider"
-        );
-      }
-      throw new UnauthorizedError("Invalid credentials");
+  const user: User | undefined = await db.query.Users.findFirst({
+    where: eq(Users.email, email),
+  });
+  if (!user) throw new UnauthorizedError("User not found with this email");
+  if (!user?.hashedpassword) {
+    if (user?.provider) {
+      throw new UnauthorizedError(
+        "This email is registered with an OAuth provider"
+      );
     }
-
-    const isValid = await bcrypt.compare(password, user.hashedpassword);
-    if (!isValid) throw new UnauthorizedError("Invalid credentials");
-    return user;
-  } catch (error) {
-    throw error;
+    throw new UnauthorizedError("Invalid credentials");
   }
+
+  const isValid = await bcrypt.compare(password, user.hashedpassword);
+  if (!isValid) throw new UnauthorizedError("Invalid credentials");
+  return user;
 };
 
 export const handleImage = async (imagePath: string) => {

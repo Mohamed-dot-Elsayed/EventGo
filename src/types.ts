@@ -1,12 +1,16 @@
 import { userRolesEnum } from "./db/schema";
 export type UserRole = (typeof userRolesEnum.enumValues)[number];
 
-declare namespace Express {
-  export interface Request {
-    user?: {
-      id: string | number;
+declare global {
+  namespace Express {
+    interface User {
+      id: string;
       name: string;
       role: string;
-    };
+    }
+
+    interface Request {
+      user?: User;
+    }
   }
 }

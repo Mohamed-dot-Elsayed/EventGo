@@ -10,7 +10,6 @@ import {
   uuid,
   index,
 } from "drizzle-orm/pg-core";
-import { InferModel } from "drizzle-orm";
 export const userRolesEnum = pgEnum("user_roles", [
   "admin",
   "organizer",
@@ -58,7 +57,7 @@ export const Events = pgTable(
       .notNull()
       .references(() => Users.id),
     maxAttendees: integer("max_attendees").notNull(),
-    currentAttendees: integer("max_attendees").notNull().default(0),
+    currentAttendees: integer("current_attendees").notNull().default(0),
     createdAt: timestamp("created_at").defaultNow(),
     updatedAt: timestamp("updated_at").defaultNow(),
   },
@@ -89,3 +88,5 @@ export const bookings = pgTable(
 
 export type User = typeof Users.$inferSelect;
 export type newUser = typeof Users.$inferInsert;
+export type Event = typeof Events.$inferSelect;
+export type newEvent = typeof Events.$inferInsert;

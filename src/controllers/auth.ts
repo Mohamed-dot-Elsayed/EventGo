@@ -7,14 +7,10 @@ import fs from "fs/promises";
 import { AppError } from "../Errors";
 
 export const login = async (req: Request, res: Response) => {
-  try {
-    const { email, password } = req.body;
-    const user: User = await loginWithEmail(email, password);
-    const token = generateToken(user);
-    res.json({ token });
-  } catch (error: any) {
-    throw error;
-  }
+  const { email, password } = req.body;
+  const user: User = await loginWithEmail(email, password);
+  const token = generateToken(user);
+  res.json({ token });
 };
 
 export const signup = async (req: Request, res: Response) => {
