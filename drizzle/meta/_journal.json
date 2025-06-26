@@ -29,6 +29,13 @@
       "when": 1748706751877,
       "tag": "0003_old_miracleman",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1750949621076,
+      "tag": "0004_cultured_daredevil",
+      "breakpoints": true
     }
   ]
 }

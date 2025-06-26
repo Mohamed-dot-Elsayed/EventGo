@@ -8,7 +8,6 @@ import {
 } from "../services/events";
 import { createEventInput, getAllEventsInput } from "../validators/events";
 import { Event } from "../db/schema";
-import { AuthenticatedRequest } from "../types/custom";
 
 export async function getAllEvents(req: Request, res: Response) {
   const filters: getAllEventsInput = req.query;
@@ -20,7 +19,7 @@ export async function getEvent(req: Request, res: Response) {
   const event: Event = await getEventById(id);
   res.status(200).json({ data: event });
 }
-export async function createEvent(req: AuthenticatedRequest, res: Response) {
+export async function createEvent(req: Request, res: Response) {
   const id = req.user?.id;
   const eventData: createEventInput = req.body;
   const event: Event = await addEvent(eventData, id);

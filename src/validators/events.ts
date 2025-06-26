@@ -1,4 +1,4 @@
-import { optional, z } from "zod";
+import { z } from "zod";
 import { eventStatusEnum } from "../db/schema";
 const eventStatusSchema = z.enum(eventStatusEnum.enumValues);
 export const createEventSchema = z.object({

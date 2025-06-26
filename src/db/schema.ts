@@ -4,12 +4,13 @@ import {
   timestamp,
   integer,
   varchar,
-  boolean,
+  check,
   pgEnum,
   uniqueIndex,
   uuid,
   index,
 } from "drizzle-orm/pg-core";
+import { sql } from "drizzle-orm";
 export const userRolesEnum = pgEnum("user_roles", [
   "admin",
   "organizer",
@@ -64,6 +65,11 @@ export const Events = pgTable(
   (events) => [
     index("status_idx").on(events.status),
     index("start_date_idx").on(events.startDate),
+    check("max_attendees_positive", sql`${events.maxAttendees} > 0`),
+    check(
+      "current_attendees_non_negative",
+      sql`${events.currentAttendees} >= 0`
+    ),
   ]
 );
 
@@ -90,3 +96,5 @@ export type User = typeof Users.$inferSelect;
 export type newUser = typeof Users.$inferInsert;
 export type Event = typeof Events.$inferSelect;
 export type newEvent = typeof Events.$inferInsert;
+export type booking = typeof bookings.$inferSelect;
+export type newBooking = typeof bookings.$inferInsert;

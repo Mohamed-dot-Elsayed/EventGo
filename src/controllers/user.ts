@@ -1,4 +1,4 @@
 import { Request, Response } from "express";
-export const updateProfile = async (req: Request, res: Response) => {};
-export const deleteProfile = async (req: Request, res: Response) => {};
-export const getUserById = async (req: Request, res: Response) => {};
+export async function updateProfile(req: Request, res: Response) {}
+export async function deleteProfile(req: Request, res: Response) {}
+export async function getUserById(req: Request, res: Response) {}

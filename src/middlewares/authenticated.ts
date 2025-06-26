@@ -1,7 +1,7 @@
 import { verifyToken } from "../utils/auth";
 import { Request, Response, NextFunction } from "express";
 import { UnauthorizedError } from "../Errors";
-import { AuthenticatedRequest } from "../types/custom";
+
 interface JwtPayload {
   id: string;
   name: string;
@@ -15,7 +15,7 @@ export function authenticated(req: Request, res: Response, next: NextFunction) {
     throw new UnauthorizedError("Invalid Token");
   }
   const token = authHeader.split(" ")[1];
-  const decoded = verifyToken(token) as AuthenticatedRequest["user"];
-  (req as AuthenticatedRequest).user = decoded;
+  const decoded = verifyToken(token);
+  req.user = decoded;
   next();
 }

@@ -7,7 +7,6 @@ import {
   getAllEventsInput,
   updateEventInput,
 } from "../validators/events";
-import { PgSelect } from "drizzle-orm/pg-core";
 
 export const addEvent = async (
   eventData: createEventInput,
@@ -55,7 +54,7 @@ export const getEventsFilter = async (filters: getAllEventsInput) => {
 export const updateEventServie = async (
   eventId: string,
   userId: string,
-  newData: updateEventInput
+  newData: any
 ) => {
   const [event] = await db
     .select()
@@ -66,6 +65,12 @@ export const updateEventServie = async (
     throw new NotFound(`Event with id ${eventId} not found`);
   }
   isOnwer(event.organizerId, userId);
+  if (newData.startDate) {
+    newData.startDate = new Date(newData.startDate);
+  }
+  if (newData.endDate) {
+    newData.endDate = new Date(newData.endDate);
+  }
   const [updatedEvent] = await db
     .update(Events)
     .set({

@@ -1,4 +1,4 @@
-import { Response, Request, NextFunction } from "express";
+import { Response, Request, NextFunction, ErrorRequestHandler } from "express";
 import { AppError } from "../Errors";
 import { StatusCodes } from "http-status-codes";
 import { PostgresError } from "postgres";
@@ -11,12 +11,12 @@ interface ErrorResponse {
   errors?: any[];
 }
 
-export function errorHandler(
+export const errorHandler: ErrorRequestHandler = (
   err: Error,
   req: Request,
   res: Response,
   next: NextFunction
-) {
+) => {
   let statusCode: number = StatusCodes.INTERNAL_SERVER_ERROR;
   let message: string = "Internal Server Error";
   let errors: any[] | undefined;
@@ -92,7 +92,7 @@ export function errorHandler(
     console.error(`[${new Date().toISOString()}] ${err.stack || err}`);
   }
   res.status(statusCode).json(response);
-}
+};
 
 function extractConstraintField(err: PostgresError, type: string): string {
   if (type == "unique") {
