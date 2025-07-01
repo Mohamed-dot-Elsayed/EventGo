@@ -1,10 +1,20 @@
 import { Router } from "express";
 import { validate } from "../../middlewares/validation";
-import { BookingSchema, cancelBookingSchema } from "../../validators/booking";
+import {
+  BookingSchema,
+  cancelBookingSchema,
+  getAllBookingsSchema,
+} from "../../validators/booking";
 import { catchAsync } from "../../utils/catchAsync";
-import { cancelBooking, createBooking } from "../../controllers/booking";
+import {
+  cancelBooking,
+  createBooking,
+  getBookingInfo,
+  getBookingsInfo,
+} from "../../controllers/booking";
 import { authenticated } from "../../middlewares/authenticated";
 import { authorizeRoles } from "../../middlewares/authorized";
+import { getAllEventsSchema } from "../../validators/events";
 
 const router = Router();
 
@@ -15,10 +25,10 @@ router.post(
   catchAsync(createBooking)
 );
 
-router.delete(
-  "/:bookingId",
-  validate(cancelBookingSchema),
-  catchAsync(cancelBooking)
-);
+router
+  .route("/:bookingId")
+  .delete(validate(cancelBookingSchema), catchAsync(cancelBooking))
+  .get(validate(cancelBookingSchema), catchAsync(getBookingInfo));
 
+router.get("/", validate(getAllBookingsSchema), catchAsync(getBookingsInfo));
 export { router };

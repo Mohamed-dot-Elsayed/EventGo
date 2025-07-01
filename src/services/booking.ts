@@ -1,7 +1,7 @@
 import { Events, booking, bookings } from "../db/schema";
 import { db } from "../db/client";
 import { and, eq } from "drizzle-orm";
-import { NotFound, ConflictError } from "../Errors";
+import { NotFound, ConflictError, UnauthorizedError } from "../Errors";
 
 export async function bookingCreateTransaction(
   userId: string,
@@ -104,4 +104,45 @@ export async function bookingCancelTransaction(
     return canceledBooking;
   });
   return result;
+}
+
+export async function getBookingsList(
+  userId: string,
+  status?: string
+): Promise<booking[]> {
+  const validStatuses = ["booked", "canceled"] as const;
+  type StatusType = (typeof validStatuses)[number];
+  let bookingsList;
+  if (status) {
+    bookingsList = await db
+      .select()
+      .from(bookings)
+      .where(
+        and(
+          eq(bookings.status, status as StatusType),
+          eq(bookings.userId, userId)
+        )
+      );
+  } else {
+    bookingsList = await db
+      .select()
+      .from(bookings)
+      .where(eq(bookings.userId, userId));
+  }
+
+  return bookingsList;
+}
+
+export async function getBooking(bookingId: string, userId: string) {
+  const [booking] = await db
+    .select()
+    .from(bookings)
+    .where(eq(bookings.id, bookingId));
+  if (!booking) {
+    throw new NotFound("Booking not found");
+  }
+  if (userId !== booking.userId) {
+    throw new UnauthorizedError("Access Denied");
+  }
+  return booking;
 }

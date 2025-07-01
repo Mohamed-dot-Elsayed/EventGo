@@ -12,14 +12,7 @@ const app = express();
 app.use(express.json());
 app.use(passport.initialize());
 app.use("/api", router);
-// app.use("/test", authenticated, (req: Request, res: Response, next) => {
-//   res.json({
-//     message: "nny",
-//     data: {
-//       user: req.user,
-//     },
-//   });
-// });
+
 app.use((req, res, next) => {
   throw new NotFound("Route not found");
 });

@@ -8,10 +8,6 @@ import {
 import { authenticated } from "../../middlewares/authenticated";
 const router = Router();
 
-router
-  .route("/profile")
-  .get(getUserById)
-  .patch(updateProfile)
-  .delete(deleteProfile);
+router.route("/").get(getUserById).patch(updateProfile).delete(deleteProfile);
 
 export { router };
